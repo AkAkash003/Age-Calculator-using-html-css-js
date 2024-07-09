@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Age Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #4682b4;
+        }
+        #calculator {
+            background: #4682b4;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        input[type="date"], button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #000000;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #5a9bd3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .highlight {
+            color: #ff4500;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advanced Age Calculator</h1>
+    <div id="calculator">
+        <label for="birthdate">Enter your birthdate:</label>
+        <input type="date" id="birthdate">
+        <button onclick="calculateAge()">Calculate Age</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateAge() {
+            var birthdate = document.getElementById('birthdate').value;
+            if (!birthdate) {
+                document.getElementById('result').innerHTML = "<span class='error'>Please enter a valid birthdate.</span>";
+                return;
+            }
+
+            var birthdateObj = new Date(birthdate);
+            var today = new Date();
+
+            if (birthdateObj > today) {
+                document.getElementById('result').innerHTML = "<span class='error'>Birthdate cannot be in the future.</span>";
+                return;
+            }
+
+            var years = today.getFullYear() - birthdateObj.getFullYear();
+            var months = today.getMonth() - birthdateObj.getMonth();
+            var days = today.getDate() - birthdateObj.getDate();
+            var hours = today.getHours() - birthdateObj.getHours();
+            var minutes = today.getMinutes() - birthdateObj.getMinutes();
+            var seconds = today.getSeconds() - birthdateObj.getSeconds();
+
+            // Adjust months and years if birthdate hasn't occurred yet this year/month
+            if (months < 0 || (months === 0 && days < 0)) {
+                years--;
+                months += 12;
+            }
+            if (days < 0) {
+                months--;
+                var lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+            if (hours < 0) {
+                hours += 24;
+                days--;
+            }
+            if (minutes < 0) {
+                minutes += 60;
+                hours--;
+            }
+            if (seconds < 0) {
+                seconds += 60;
+                minutes--;
+            }
+
+            var totalMonths = years * 12 + months;
+            var totalDays = Math.floor((today - birthdateObj) / (1000 * 60 * 60 * 24));
+            var totalHours = Math.floor((today - birthdateObj) / (1000 * 60 * 60));
+            var totalSeconds = Math.floor((today - birthdateObj) / 1000);
+
+            var ageText = "Your age is:<br> <span class='highlight'>" + years + " years</span>, " +
+                          "<span class='highlight'>" + months + " months</span>, " +
+                          "<span class='highlight'>" + days + " days</span>, " +
+                          "<span class='highlight'>" + hours + " hours</span>, " +
+                          "<span class='highlight'>" + minutes + " minutes</span>, " +
+                          "and <span class='highlight'>" + seconds + " seconds</span>.<br><br>" +
+                          "Total: <span class='highlight'>" + totalMonths + " months</span>, " +
+                          "<span class='highlight'>" + totalDays + " days</span>, " +
+                          "<span class='highlight'>" + totalHours + " hours</span>, " +
+                          "and <span class='highlight'>" + totalSeconds + " seconds</span>.";
+
+            document.getElementById('result').innerHTML = ageText;
+        }
+    </script>
+</body>
+</html>
+
